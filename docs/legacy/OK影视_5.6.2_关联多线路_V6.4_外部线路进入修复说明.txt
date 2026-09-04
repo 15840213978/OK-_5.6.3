@@ -1,0 +1,34 @@
+OK影视 5.6.2 V6.4 —— 外部线路进入修复
+
+本版基于 V6.2，不采用之前误解“第三代接口”后做的 V6.3 改动。
+
+修复的实际问题：
+- 内置线路进入正常；
+- 肥猫 / 驸马 / 巧计 / OK / 王二小等其它 Config 切换后，
+  当前 VodActivity 仍可能复用旧 FolderFragment；
+- 旧 Fragment 保存着旧线路的 siteKey，因此线路看似切换成功，
+  但海报墙、详情、播放实际仍按旧 key 请求，表现为“外部线路进不去”。
+
+根因：
+FongMi 的 VodActivity 原本不是设计成在同一个 Activity 内热切整个 Config。
+其 PageAdapter.destroyItem() 也不真正销毁旧 Fragment。
+V4-V6.2 为了做到“不用返回一次就切线路”，直接 setPager() 重建，
+仍可能保留旧 Fragment 状态。
+
+V6.4：
+1. 选择其它 Config 后，先走原生 VodConfig.load。
+2. 加载成功后获取新线路首页。
+3. 自动启动一个全新的 VodActivity 并关闭旧 VodActivity。
+4. 对用户来说仍然是“一点线路直接切换”，不需要手工返回一次。
+5. 新 Activity 的 Fragment / siteKey / Spider / Config 全部重新创建。
+6. 外部 Config 加载失败时自动恢复原 Config，避免全局配置卡在半初始化状态。
+7. 多线路搜索海报点击也增加目标 siteKey 校验。
+8. 搜索结果所属外部 Config 初始化失败时自动恢复进入前 Config。
+9. V6.2 的流式海报墙、多 Config 搜索、永久屏蔽全部保留。
+10. 电视版和手机版搜索结果进入都做了回滚保护。
+
+建议测试：
+- 当前先在“宸龙影视”。
+- 点左上角 -> 切“肥猫线路”，应自动进入新线路首页，不需要返回。
+- 再切“驸马/巧计/OK/王二小”逐条测试。
+- 搜索影片 -> 在“全部”中点一个来自非当前线路的海报 -> 应先切目标 Config 后进入详情。

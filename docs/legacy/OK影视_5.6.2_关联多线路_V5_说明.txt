@@ -1,0 +1,48 @@
+OK影视 5.6.2 关联多线路 V5（完整源码）
+
+这次已经找到真正的多线路入口，不再猜。
+
+关键发现：
+app/src/main/assets/clys/chenlong.jpg
+文件后缀虽然是 .jpg，但实际是 UTF-8 JSON 文本。
+它内部包含顶层 urls[]，一共 9 条真正 Config 线路。
+
+线路包括：
+- 🐉宸龙丨宸龙影视 -> assets://clys/clys.top
+- 🐉宸龙丨肥猫线路 -> http://肥猫.net/tv
+- 🐉宸龙丨驸马线路 -> http://fmys.top/fmys.json
+- 🐉宸龙丨巧计线路 -> http://cdn.qiaoji8.com/tvbox.json
+- 🐉宸龙丨OK 线路 -> https://cnb.cool/fish2018/zx/-/git/raw/master/FongMi.json
+- 🐉宸龙丨王二小线 -> http://tvbox.王二小放牛娃.top
+- 🐉宸龙丨老刘备源 -> https://raw.liucn.cc/box/m.json
+- 🐉宸龙丨裤佬线路 -> https://gh-proxy.org/https://raw.githubusercontent.com/Jsnzkpg/Jsnzkpg/Jsnzkpg/Jsnzkpg2
+- 🐉宸龙丨南风线路 -> https://play.iptv365.org/南风/api.json
+
+V4 错误：
+V4 把 assets://clys/clys.top 当成唯一入口，所以设置 -> 点播只出现“宸龙本地包”。
+clys.top 是其中第一条子配置，不是多线路仓。
+
+V5 修复：
+1. Config.vod() 首次启动入口改为 assets://clys/chenlong.jpg。
+2. 直接使用 FongMi 原生 VodConfig.parseDepot()：
+   - 识别 urls[]
+   - 导入每条 Config
+   - 自动加载第一条
+   - 删除临时 depot 入口
+   - 设置 -> 点播保留全部线路。
+3. 覆盖安装也支持：BuiltinDepot.ensure() 会读取同一份 chenlong.jpg，
+   把缺失线路补到 Room Config 表，不要求清除数据。
+4. 搜索左侧现在按 Config.getAll(0) 显示真正线路，不再按当前 clys.top 的 sites。
+5. 每条 Config 各自搜索自身 sites。
+6. “全部”只汇总未屏蔽 Config。
+7. 双击 Config 永久屏蔽；再双击永久解除。
+8. 搜索结果保存 searchCid，从“全部”点击结果时会先切换到对应 Config 再进入详情/播放。
+9. 电视版 + 手机版同步。
+10. debug / release、arm64_v8a / armeabi_v7a flavor 保留。
+
+左上角：
+电视版改为 HistoryDialog.vod().readOnly()，显示真正 Config 线路列表。
+选择后直接加载该 Config，并在当前点播页面重新取首页，不再要求手工返回一次。
+
+注意：
+chenlong.jpg 不需要真的改后缀，程序按内容读取；保留原文件名可以兼容你原来的关联逻辑。

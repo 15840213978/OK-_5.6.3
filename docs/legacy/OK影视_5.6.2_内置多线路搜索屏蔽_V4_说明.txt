@@ -1,0 +1,73 @@
+OK影视 5.6.2 内置多线路搜索屏蔽 V4（完整源码）
+
+底板：
+OK影视_5.6.2_默认首页校准版_完整源码
+
+这次按你的实际结构改：
+- 资源已经全部内置到 APK 的 app/src/main/assets/clys/ 中。
+- 默认入口仍是 assets://clys/clys.top。
+- “多线路”直接使用 clys.top -> sites，不再改成外部 Config 仓。
+- assets/clys 内置包内容原样保留，没有重新生成、没有改地址、没有删线路。
+
+一、左上角资源切换修复（电视版）
+原问题：
+点左上角图标能出来资源列表，但选中后当前 VodActivity 仍拿着旧 key/result，
+所以必须返回一次，再进入才能看到新线路。
+
+V4：
+1. 左上角 logo -> SiteDialog 内置资源列表。
+2. 选择资源后立即 setHome。
+3. 立即重新请求新线路首页。
+4. 当前 VodActivity 直接重建标题、首页、分类和 ViewPager。
+5. 不需要手工返回一次。
+
+二、多线路搜索（电视版 + 手机版）
+1. 打开搜索，输入影片名。
+2. 左侧先完整显示：
+   全部
+   线路1
+   线路2
+   线路3
+   ...
+3. 不再等某线路“搜到结果”以后才出现在列表，所以失败线路/空结果线路也不会消失。
+4. searchable=2（以前手工关闭过）也重新显示；只有配置明确 searchable=0 的线路不参与搜索。
+5. 所有线路继续并行搜索。
+6. 单击某条线路 -> 只看该线路结果。
+7. 点击“全部” -> 汇总所有未屏蔽线路。
+
+三、永久屏蔽
+1. 连续双击某条线路 -> 永久屏蔽。
+2. 被屏蔽线路左侧仍保留，显示 ⛔。
+3. 该线路自己的结果仍然能单独看。
+4. “全部”不再包含该线路。
+5. 再次连续双击 -> 永久解除。
+6. 解除后“全部”立即把已经搜到的该线路结果重新加回来。
+7. SharedPreferences 永久保存；退出 APP、重启设备、换搜索词仍然有效。
+8. 不修改 clys.top，不删除 Site，不使用 searchable 字段作为屏蔽存储。
+
+四、手机版 / 电视版 / 测试版 / 正式版
+原工程的 flavor 保留：
+- leanback：电视版
+- mobile：手机版
+- arm64_v8a
+- armeabi_v7a
+- debug：测试版
+- release：正式版
+
+新增根目录一键脚本：
+- 打包_全部版本.cmd
+- 打包_电视_ARM64_测试版.cmd
+- 打包_电视_ARM64_正式版.cmd
+- 打包_手机_ARM64_测试版.cmd
+- 打包_手机_ARM64_正式版.cmd
+
+五、关键文件
+app/src/main/java/com/fongmi/android/tv/setting/SearchBlockManager.java
+app/src/leanback/java/com/fongmi/android/tv/ui/activity/VodActivity.java
+app/src/leanback/java/com/fongmi/android/tv/ui/activity/CollectActivity.java
+app/src/leanback/java/com/fongmi/android/tv/ui/adapter/CollectAdapter.java
+app/src/leanback/java/com/fongmi/android/tv/ui/fragment/CollectFragment.java
+app/src/leanback/res/layout/activity_collect.xml
+app/src/mobile/java/com/fongmi/android/tv/ui/adapter/CollectAdapter.java
+app/src/mobile/java/com/fongmi/android/tv/ui/fragment/CollectFragment.java
+app/src/mobile/java/com/fongmi/android/tv/ui/fragment/VodFragment.java

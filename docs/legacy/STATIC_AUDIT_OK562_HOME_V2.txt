@@ -1,0 +1,11 @@
+OK影视 5.6.2 默认首页校准版
+
+- versionCode: 562
+- versionName: 5.6.2
+- 启动入口: HomeActivity（保留）
+- 默认显示: VodActivity / 首页 + 分类
+- 首页内容: homeContent
+- 分类内容: categoryContent
+- 播放层: 未修改
+- 本地包: assets/clys/clys.top（保留）
+- FM功能首页: 保留，返回即可进入

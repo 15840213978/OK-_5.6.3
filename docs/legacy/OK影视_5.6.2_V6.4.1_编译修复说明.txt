@@ -1,0 +1,14 @@
+V6.4.1 修复截图中的手机版编译错误。
+
+错误：
+app/src/mobile/java/com/fongmi/android/tv/ui/fragment/VodFragment.java:180
+找不到符号：SiteDialog
+
+原因：
+VodFragment.onSite() 仍然需要：
+SiteDialog.create().change().show(this);
+
+但 V6.4 清理 import 时误删了：
+import com.fongmi.android.tv.ui.dialog.SiteDialog;
+
+本版只补回正确 import，不改 V6.4 的外部线路进入修复逻辑。

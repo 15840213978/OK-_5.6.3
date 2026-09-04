@@ -1,0 +1,25 @@
+V6.4.2 修复手机版第二个编译错误。
+
+截图错误位置：
+app/src/mobile/java/com/fongmi/android/tv/ui/fragment/CollectFragment.java
+
+错误代码：
+mSearchAdapter.setItems(new ArrayList<>(), null);
+
+原因：
+BaseDiffAdapter 同时存在两个重载：
+setItems(List<T>, Runnable)
+setItems(List<T>, Callback)
+
+第二个参数传 null 时，Java 无法判断应该调用哪一个，所以报“方法调用不明确”。
+
+修复为：
+mSearchAdapter.setItems(new ArrayList<>());
+
+BaseDiffAdapter 本身已经提供单参数 setItems(List<T>)，效果就是清空列表并正常提交 Diff。
+
+同时保留：
+- V6.4 外部线路进入修复
+- V6.4.1 SiteDialog import 修复
+- V6.2 流式海报墙
+- 多 Config 搜索与永久屏蔽

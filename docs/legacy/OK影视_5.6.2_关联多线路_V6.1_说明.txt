@@ -1,0 +1,36 @@
+OK影视 5.6.2 关联多线路 V6 - 搜索海报墙/配置初始化修复
+
+本版修的是 V5 的核心结构 bug：
+
+1. V5 搜索左侧用了 Config.getAll(0)，把数据库里以前手工添加的 yyy URL、老刘备源、测试源也混进来了。
+   V6 改为只读取 assets://clys/chenlong.jpg 的 urls[]，严格按包内 9 条关联线路显示。
+
+2. V5 的 MultiConfigSearchEngine 只手工解析每条 Config 的 spider/sites，
+   但没有让 VodConfig.get() 完整切换到该 Config。
+   一些 CSP/JS/PY 在搜索时会反查当前 VodConfig、headers、proxy、rules、site，
+   因此出现“配置信息初始化失败，请重启APP”、右侧海报墙为空。
+
+3. V6 新增 VodConfig.loadForSearch()：
+   每条线路搜索前完整走正常 checkJson -> parseConfig 初始化链，
+   搜完后自动恢复进入搜索前的原 Config。
+
+4. 点击搜索结果时先停止聚合搜索并等待恢复完成，再加载结果所属 Config，
+   避免搜索线程恢复旧 Spider 和播放线程加载目标 Spider 同时发生。
+
+5. 永久屏蔽 key 改用 Config URL，不再用数据库 id。即使 Config id 重建，屏蔽仍稳定。
+
+6. 搜索左侧现在只应该看到：
+   全部 + 宸龙影视 + 肥猫 + 驸马 + 巧计 + OK + 王二小 + 老刘备 + 裤佬 + 南风。
+   不应再出现单独的 https://yyy... 数据库旧线路。
+
+注意：
+- 本版是完整源码，不是补丁。
+- 已做源码静态检查；最终以 Android Studio 本机编译测试为准。
+
+
+V6.1 补充：
+- https://yyy.kanglian.cc.cd/yl-nb-yj.json 本身也是一条完整 Config 接口。
+- 它不在 assets://clys/chenlong.jpg 的 9 条 urls[] 内，所以不能因为“只认 depot”而删掉。
+- V6.1 保留 chenlong.jpg 的 9 条关联线路，同时额外保留这条永乐接口。
+- 已有数据库里若这条接口已有名称，则保留原名称；全新安装默认显示“永乐线路”。
+- 搜索页因此最多显示：全部 + 9 条内置关联线路 + 永乐接口。

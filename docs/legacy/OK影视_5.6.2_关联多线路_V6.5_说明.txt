@@ -1,0 +1,64 @@
+OK影视 5.6.2 V6.5 —— 总线路子源 + 假“重启APP”提示修复（全版本）
+
+本版基于 V6.4.2。
+
+一、yyy 不是“永乐线路”
+https://yyy.kanglian.cc.cd/yl-nb-yj.json
+本质是一条“总线路 Config”，下面还有很多真实 Site 子源。
+
+V6.5：
+- 不再把它硬命名为“永乐线路”
+- 改名为“总线路”
+- 覆盖安装已有数据库也自动把旧名字纠正为“总线路”
+
+二、总线路下面展开真实子源
+搜索时 MultiConfigSearchEngine 现在保留：
+Config -> Site -> Vod
+三级关系。
+
+在“总线路”下会出现真实子源，例如：
+总线路
+↳ 腾讯备...
+↳ 爱奇艺...
+↳ 猎手...
+↳ 袋鼠...
+...
+
+不是再把这些海报全部固定塞到一个“永乐线路”标签里。
+
+普通 Config 仍按原来的顶层线路显示，不强制展开，避免列表爆炸。
+
+三、屏蔽逻辑
+- 双击“总线路” -> 整个总线路不进入“全部”
+- 双击某个 ↳ 子源 -> 只屏蔽该子源
+- 子源本身仍保留在左侧，可再次双击解除
+- “总线路”聚合页自动排除被屏蔽子源
+- “全部”同时排除被屏蔽 Config / 子源
+
+四、去掉假“请重启APP”提示
+部分远程配置会返回：
+“配置信息初始化失败，请重启APP”
+
+但实际搜索和海报已经正常运行，所以这是非致命提示。
+V6.5 在 Notify 公共层只过滤这一条特定提示，不影响其它错误提示。
+
+五、所有版本一起修
+修改位置覆盖：
+- app/src/main：公共逻辑，所有版本共用
+- app/src/leanback：电视版
+- app/src/mobile：手机版
+
+因此同时作用于：
+- leanback arm64 debug
+- leanback arm64 release
+- leanback armeabi_v7a debug/release
+- mobile arm64 debug/release
+- mobile armeabi_v7a debug/release
+
+保留：
+- V6.4 外部线路直接进入修复
+- V6.4.1 SiteDialog 编译修复
+- V6.4.2 手机版 setItems 编译修复
+- V6.2 流式海报墙
+- 多 Config 搜索
+- searchCid 跳转到正确 Config
