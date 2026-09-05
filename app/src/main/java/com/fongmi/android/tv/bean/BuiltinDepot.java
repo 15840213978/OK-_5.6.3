@@ -13,9 +13,9 @@ import java.util.List;
 
 public final class BuiltinDepot {
 
-    public static final String URL = "assets://clys/chenlong.jpg";
-    public static final String NAME = "🐉宸龙丨多线路";
-    public static final String EXTRA_YL_URL = "https://yyy.kanglian.cc.cd/yl-nb-yj.json";
+    public static final String URL = null
+    public static final String NAME = "";
+    public static final String EXTRA_YL_URL = "";
 
     private BuiltinDepot() {
     }
