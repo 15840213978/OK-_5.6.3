@@ -1,4 +1,4 @@
-name: Build OK 5.6.3 APK
+name: 编译 OK影视 ARM64
 
 on:
   workflow_dispatch:
@@ -17,6 +17,11 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      - name: 配置 Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
       - name: Android SDK
         uses: android-actions/setup-android@v3
 
@@ -25,7 +30,7 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleLeanbackArm64_v8aRelease
 
-      - name: 上传APK
+      - name: 上传 APK
         uses: actions/upload-artifact@v4
         with:
           name: OK-5.6.3-ARM64
