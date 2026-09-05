@@ -3,11 +3,9 @@ name: OK影视 ARM64 全版本自动发布
 permissions:
   contents: write
 
+# 手动触发，不再 push 自动重复构建
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
 
 
 jobs:
@@ -42,18 +40,14 @@ jobs:
         uses: android-actions/setup-android@v3
 
 
-      # 编译所有版本
+      # 编译全部 APK
       - name: 编译全部版本 APK
         run: |
           chmod +x gradlew
 
           ./gradlew clean
 
-          ./gradlew assembleRelease
-
-          ./gradlew assembleLeanbackArm64_v8aRelease
-
-          ./gradlew assembleLeanbackArmeabi_v7aRelease
+          ./gradlew assembleRelease assembleLeanbackArm64_v8aRelease assembleLeanbackArmeabi_v7aRelease
 
 
       # 查看生成文件
@@ -66,7 +60,6 @@ jobs:
       - name: 发布 APK Release
         uses: softprops/action-gh-release@v2
         with:
-
           tag_name: v5.6.3-build-${{ github.run_number }}
 
           name: OK影视 5.6.3 自动构建版
