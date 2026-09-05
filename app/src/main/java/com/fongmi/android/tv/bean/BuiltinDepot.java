@@ -13,7 +13,7 @@ import java.util.List;
 
 public final class BuiltinDepot {
 
-    public static final String URL = null
+    public static final String URL = null;
     public static final String NAME = "";
     public static final String EXTRA_YL_URL = "";
 
