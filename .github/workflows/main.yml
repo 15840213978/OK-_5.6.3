@@ -1,0 +1,32 @@
+name: Build OK 5.6.3 APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 拉取源码
+        uses: actions/checkout@v4
+
+      - name: 配置 JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: 编译 ARM64 Leanback
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleLeanbackArm64_v8aRelease
+
+      - name: 上传APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: OK-5.6.3-ARM64
+          path: app/build/outputs/apk/**/*.apk
