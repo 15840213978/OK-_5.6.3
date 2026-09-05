@@ -1,37 +1,68 @@
-name: 编译 OK影视 ARM64
+name: OK影视 ARM64 全版本自动发布
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+
+      # 拉取源码
       - name: 拉取源码
         uses: actions/checkout@v4
 
+
+      # JDK
       - name: 配置 JDK
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
+
+      # Python（chaquo需要）
       - name: 配置 Python 3.10
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      - name: Android SDK
+
+      # Android SDK
+      - name: 配置 Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: 编译 ARM64 Leanback
+
+      # 编译全部 APK
+      - name: 编译全部版本 APK
         run: |
           chmod +x gradlew
+          ./gradlew clean
+          ./gradlew assembleRelease
           ./gradlew assembleLeanbackArm64_v8aRelease
+          ./gradlew assembleLeanbackArmeabi_v7aRelease
 
-      - name: 上传 APK
-        uses: actions/upload-artifact@v4
+
+      # 发布 Release
+      - name: 发布 APK
+        uses: softprops/action-gh-release@v2
         with:
-          name: OK-5.6.3-ARM64
-          path: app/build/outputs/apk/**/*.apk
+          tag_name: v5.6.3-${{ github.run_number }}
+          name: OK影视 5.6.3 自动构建版
+          body: |
+            自动编译版本
+
+            包含:
+            - Mobile Release
+            - Leanback ARM64 TV
+            - ARMv7版本
+
+          files: |
+            app/build/outputs/apk/**/*.apk
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
