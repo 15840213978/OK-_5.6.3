@@ -1,8 +1,9 @@
 pluginManagement {
     repositories {
-        gradlePluginPortal()
-        mavenCentral()
         google()
+        gradlePluginPortal()
+        maven { url = "https://maven.aliyun.com/repository/public" }
+        mavenCentral()
     }
 }
 
@@ -14,6 +15,7 @@ dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         maven { url = uri("$rootDir/third_party/maven") }
+        maven { url = "https://maven.aliyun.com/repository/public" }
         mavenCentral()
         google()
         flatDir { dirs "$rootDir/app/libs" }
