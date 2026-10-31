@@ -6,18 +6,18 @@ import android.text.TextUtils;
 import androidx.annotation.Nullable;
 import androidx.media3.exoplayer.hls.playlist.HlsAdsParser;
 
-import com.fongmi.android.tv.player.PlaybackAutoContext;
-import com.fongmi.android.tv.player.PlaybackRouteRegistry;
-import com.fongmi.android.tv.player.PlaybackResourceClassifier;
-import com.fongmi.android.tv.player.PlaybackSystemConditionMonitor;
-import com.fongmi.android.tv.player.PreloadPausePolicy;
-import com.fongmi.android.tv.player.cache.PlaybackDiskBufferStore;
-import com.fongmi.android.tv.player.mpv.MpvPreloadPolicy;
-import com.fongmi.android.tv.setting.PlayerSetting;
-import com.fongmi.android.tv.setting.PlaybackPerformanceCatalog;
-import com.fongmi.android.tv.setting.PlaybackPerformanceSetting;
-import com.fongmi.android.tv.setting.PreloadSetting;
-import com.fongmi.android.tv.setting.Setting;
+import com.fongmi.android.ok.player.PlaybackAutoContext;
+import com.fongmi.android.ok.player.PlaybackRouteRegistry;
+import com.fongmi.android.ok.player.PlaybackResourceClassifier;
+import com.fongmi.android.ok.player.PlaybackSystemConditionMonitor;
+import com.fongmi.android.ok.player.PreloadPausePolicy;
+import com.fongmi.android.ok.player.cache.PlaybackDiskBufferStore;
+import com.fongmi.android.ok.player.mpv.MpvPreloadPolicy;
+import com.fongmi.android.ok.setting.PlayerSetting;
+import com.fongmi.android.ok.setting.PlaybackPerformanceCatalog;
+import com.fongmi.android.ok.setting.PlaybackPerformanceSetting;
+import com.fongmi.android.ok.setting.PreloadSetting;
+import com.fongmi.android.ok.setting.Setting;
 import com.github.catvod.crawler.SpiderDebug;
 import com.github.catvod.net.OkHttp;
 import com.github.catvod.utils.Path;
@@ -419,9 +419,9 @@ public final class MpvHlsProxy extends NanoHTTPD {
         MpvHlsCacheCoordinator.CapacitySnapshot capacity =
                 preloadCapacity.capacity();
         boolean storageKnown = capacity.policy().state()
-                != com.fongmi.android.tv.player.cache.DiskCacheCapacityPolicy.State.UNAVAILABLE;
+                != com.fongmi.android.ok.player.cache.DiskCacheCapacityPolicy.State.UNAVAILABLE;
         boolean cacheEnabled = capacity.policy().state()
-                != com.fongmi.android.tv.player.cache.DiskCacheCapacityPolicy.State.DISABLED;
+                != com.fongmi.android.ok.player.cache.DiskCacheCapacityPolicy.State.DISABLED;
         boolean budgetAvailable = preloadCapacity.allowed()
                 || !preloading.isEmpty() || activePreloadTransfers.get() > 0;
         return new PreloadRuntimeSnapshot(

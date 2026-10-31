@@ -31,7 +31,7 @@ function Static-Validate {
     if ($factory -notmatch 'new MpvPlayerEngine') { throw "PlayerEngineFactory 尚未启用 MPV。" }
 
     $gradle = Get-Content -LiteralPath (Join-Path $Root "app\build.gradle") -Raw
-    if ($gradle -match "exclude 'com/fongmi/android/tv/player/mpv/MpvPlayerEngine.java'") {
+    if ($gradle -match "exclude 'com/fongmi/android/ok/player/mpv/MpvPlayerEngine.java'") {
         throw "app/build.gradle 仍排除了 MpvPlayerEngine。"
     }
 }

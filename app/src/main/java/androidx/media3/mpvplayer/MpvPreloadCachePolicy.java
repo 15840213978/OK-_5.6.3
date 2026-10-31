@@ -1,6 +1,6 @@
 package androidx.media3.mpvplayer;
 
-import com.fongmi.android.tv.player.PlaybackAutoContext;
+import com.fongmi.android.ok.player.PlaybackAutoContext;
 
 /** Pure policy for extending MPV's forward cache during playback and allowed pauses. */
 final class MpvPreloadCachePolicy {

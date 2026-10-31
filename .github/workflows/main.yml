@@ -1,79 +1,73 @@
-name: OK影视 ARM64 全版本自动发布
+name: Build OK APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
 permissions:
   contents: write
 
-# 手动触发，不再 push 自动重复构建
-on:
-  workflow_dispatch:
-
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    timeout-minutes: 120
 
     steps:
-
-      # 拉取源码
       - name: 拉取源码
         uses: actions/checkout@v4
 
-
-      # JDK
-      - name: 配置 JDK 17
+      - name: 配置 JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: '21'
 
-
-      # Python（Chaquopy需要）
-      - name: 配置 Python 3.10
+      - name: 配置 Python 3.10（Chaquopy 需要）
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-
-      # Android SDK
       - name: 配置 Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: 配置 Gradle 缓存
+        uses: gradle/actions/setup-gradle@v4
 
-      # 编译全部 APK
-      - name: 编译全部版本 APK
+      - name: 编译全部 Release APK
         run: |
           chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon --stacktrace
 
-          ./gradlew clean
+      - name: 查看生成的 APK
+        run: find app/build/outputs/apk -name "*.apk"
 
-          ./gradlew assembleRelease assembleLeanbackArm64_v8aRelease assembleLeanbackArmeabi_v7aRelease
+      - name: 上传构建产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: OK-5.6.3-${{ github.sha }}
+          path: app/build/outputs/apk/**/*.apk
+          retention-days: 30
 
-
-      # 查看生成文件
-      - name: 查看 APK
-        run: |
-          find app/build/outputs/apk -name "*.apk"
-
-
-      # 发布 Release
-      - name: 发布 APK Release
+      - name: 发布 Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v5.6.3-build-${{ github.run_number }}
-
-          name: OK影视 5.6.3 自动构建版
-
+          name: OK影视 5.6.3 自动构建 #${{ github.run_number }}
           body: |
-            自动编译发布
+            由 GitHub Actions 自动构建。
 
-            包含：
-            - Mobile Release
-            - Leanback ARM64 TV
-            - ARMv7版本
+            提交：${{ github.sha }}
+            分支：${{ github.ref_name }}
 
+            包含全部 Release 变体：
+            - Mobile ARM64 / ARMv7
+            - Leanback ARM64 / ARMv7
           files: |
             app/build/outputs/apk/**/*.apk
-
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
