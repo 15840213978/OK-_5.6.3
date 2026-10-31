@@ -2,8 +2,8 @@ package androidx.media3.mpvplayer;
 
 import androidx.annotation.Nullable;
 
-import com.fongmi.android.tv.player.cache.DiskCacheCapacityPolicy;
-import com.fongmi.android.tv.utils.FileUtil;
+import com.fongmi.android.ok.player.cache.DiskCacheCapacityPolicy;
+import com.fongmi.android.ok.utils.FileUtil;
 
 import java.io.File;
 import java.io.FileInputStream;

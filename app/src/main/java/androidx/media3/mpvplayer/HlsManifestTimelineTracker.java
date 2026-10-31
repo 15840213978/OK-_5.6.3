@@ -1,7 +1,7 @@
 package androidx.media3.mpvplayer;
 
-import com.fongmi.android.tv.player.PlaybackAutoContext;
-import com.fongmi.android.tv.player.PlaybackResourceClassifier;
+import com.fongmi.android.ok.player.PlaybackAutoContext;
+import com.fongmi.android.ok.player.PlaybackResourceClassifier;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

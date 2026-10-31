@@ -13,19 +13,19 @@ def hasReleaseSigning = localProps['storeFile'] && localProps['keyAlias'] && loc
 def releaseKeyPassword = localProps['keyPassword'] ?: localProps['storePassword']
 
 android {
-    namespace = 'com.fongmi.android.tv'
+    namespace = 'com.fongmi.android.ok'
 
     compileSdk libs.versions.compileSdk.get().toInteger()
 
     defaultConfig {
-        applicationId "com.fongmi.android.tv"
+        applicationId "com.fongmi.android.ok"
         minSdk libs.versions.minSdk.get().toInteger()
         targetSdk libs.versions.targetSdk.get().toInteger()
         versionCode 563
         versionName "5.6.3"
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = ["room.schemaLocation": "$projectDir/schemas".toString(), "eventBusIndex": "com.fongmi.android.tv.event.EventIndex"]
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString(), "eventBusIndex": "com.fongmi.android.ok.event.EventIndex"]
             }
         }
     }
@@ -94,9 +94,9 @@ android {
             java {
                 // Real bundled MPV is enabled. The three legacy effect wrappers below
                 // target the older private MPV API and stay excluded.
-                exclude 'com/fongmi/android/tv/player/mpv/MpvPlayerEffect.java'
-                exclude 'com/fongmi/android/tv/player/effect/audio/MpvAudioEffectFilter.java'
-                exclude 'com/fongmi/android/tv/player/effect/video/MpvVideoEffectController.java'
+                exclude 'com/fongmi/android/ok/player/mpv/MpvPlayerEffect.java'
+                exclude 'com/fongmi/android/ok/player/effect/audio/MpvAudioEffectFilter.java'
+                exclude 'com/fongmi/android/ok/player/effect/video/MpvVideoEffectController.java'
             }
         }
     }

@@ -23,7 +23,7 @@
             android:layout_marginEnd="12dp"
             android:src="@drawable/ic_logo" />
 
-        <com.fongmi.android.tv.ui.custom.CustomTitleView
+        <com.fongmi.android.ok.ui.custom.CustomTitleView
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
         app:focusOutEnd="false"
         app:focusOutFront="false" />
 
-    <com.fongmi.android.tv.ui.custom.CustomViewPager
+    <com.fongmi.android.ok.ui.custom.CustomViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -1,7 +1,7 @@
 # TV
 -keep class androidx.leanback.widget.** { *; }
 -keep class com.fongmi.quickjs.method.** { *; }
--keep class com.fongmi.android.tv.bean.** { *; }
+-keep class com.fongmi.android.ok.bean.** { *; }
 
 # Gson
 -keep class com.google.gson.** { *; }
@@ -86,7 +86,7 @@
 -keep class is.xyz.mpv.MPVLib$* { *; }
 
 # libplayer.so resolves these ISO callbacks by literal JNI names.
--keep class com.fongmi.android.tv.player.iso.IsoSessionManager {
+-keep class com.fongmi.android.ok.player.iso.IsoSessionManager {
     public static long length(long);
     public static int readAt(long, long, java.nio.ByteBuffer, int);
     public static void close(long);
@@ -96,4 +96,4 @@
 # Keep MPV player lifecycle and the TV adapter intact under R8.
 -keep,allowobfuscation class androidx.media3.mpvplayer.MpvPlayer { *; }
 -keep,allowobfuscation class androidx.media3.mpvplayer.MpvPlayer$* { *; }
--keep,allowobfuscation class com.fongmi.android.tv.player.mpv.MpvPlayerEngine { *; }
+-keep,allowobfuscation class com.fongmi.android.ok.player.mpv.MpvPlayerEngine { *; }
